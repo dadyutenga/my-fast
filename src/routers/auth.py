@@ -40,5 +40,23 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
 
 @router.post("/refresh", response_model=Token)
 async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
-    # Implement refresh token logic here
-    pass
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate refresh token",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = decode_token(refresh_token)
+        email: str = payload.get("sub")
+        token_type: str = payload.get("type")
+        if email is None or token_type != "refresh":
+            raise credentials_exception
+        token_data = TokenData(email=email, role=payload.get("role"))
+    except jwt.PyJWTError:
+        raise credentials_exception
+    user = await db.query(User).filter(User.email == email).first()
+    if user is None:
+        raise credentials_exception
+    access_token = create_access_token(data={"sub": user.email, "role": user.role.value})
+    new_refresh_token = create_refresh_token(data={"sub": user.email, "role": user.role.value})
+    return {"access_token": access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
