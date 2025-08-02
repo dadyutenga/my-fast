@@ -16,6 +16,13 @@ async def create_item(item: ItemCreate, db: AsyncSession = Depends(get_db), _ = 
     await db.refresh(db_item)
     return db_item
 
+@router.post("/items/bulk", response_model=list[ItemInDB])
+async def create_items_bulk(items: list[ItemCreate], db: AsyncSession = Depends(get_db), _ = Depends(role_required([Role.admin, Role.superadmin]))):
+    db_items = [Item(**item.dict()) for item in items]
+    db.bulk_save_objects(db_items)
+    await db.commit()
+    return db_items
+
 @router.get("/items", response_model=list[ItemInDB])
 async def read_items(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
     items = await db.query(Item).offset(skip).limit(limit).all()

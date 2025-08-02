@@ -60,3 +60,19 @@ async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
     access_token = create_access_token(data={"sub": user.email, "role": user.role.value})
     new_refresh_token = create_refresh_token(data={"sub": user.email, "role": user.role.value})
     return {"access_token": access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
+
+@router.post("/validate")
+async def validate_token(token: str):
+    try:
+        payload = decode_token(token)
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        return {"valid": True, "email": email, "role": payload.get("role")}
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+@router.post("/logout")
+async def logout(current_user: User = Depends(get_current_active_user)):
+    # In a real application, you might invalidate the token in a database or cache
+    return {"message": "Successfully logged out"}
