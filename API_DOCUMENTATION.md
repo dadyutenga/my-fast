@@ -184,21 +184,36 @@ This document provides a detailed overview of all API endpoints available in the
   - **Response**: List of receipt objects.
   - **Status Codes**: 200 OK
 
-## Payment Endpoints (Selcom Pay)
+## Payment Endpoints
 
-- **POST /api/payment/payments/initiate**
-  - **Description**: Initiate a payment transaction.
+- **POST /api/payments**
+  - **Description**: Create a new payment record and initiate payment with the selected gateway.
   - **Headers**: `Authorization: Bearer <token>`
-  - **Request Body**: `{ "amount": float, "order_id": "string", "buyer_email": "string", "buyer_name": "string", "buyer_phone": "string" }`
-  - **Response**: `{ "message": "Payment initiated", "data": object }`
+  - **Request Body**: `{ "order_id": "string", "amount": float, "currency": "string", "method": "enum (selcom, paypal, stripe, mpesa)", "buyer_email": "string (optional)", "buyer_name": "string (optional)", "buyer_phone": "string (optional)" }`
+  - **Response**: Payment object.
   - **Status Codes**: 200 OK, 400 Bad Request, 401 Unauthorized, 500 Internal Server Error
 
-- **POST /api/payment/payments/status**
-  - **Description**: Check the status of a payment transaction.
+- **GET /api/payments**
+  - **Description**: Get a list of payments for the current user.
   - **Headers**: `Authorization: Bearer <token>`
-  - **Request Body**: `{ "order_id": "string" }`
-  - **Response**: `{ "message": "Payment status retrieved", "data": object }`
-  - **Status Codes**: 200 OK, 400 Bad Request, 401 Unauthorized, 500 Internal Server Error
+  - **Query Params**: `skip` (int, default 0), `limit` (int, default 100)
+  - **Response**: List of payment objects.
+  - **Status Codes**: 200 OK, 401 Unauthorized
+
+- **GET /api/payments/{payment_id}**
+  - **Description**: Get details of a specific payment.
+  - **Headers**: `Authorization: Bearer <token>`
+  - **Path Param**: `payment_id` (int)
+  - **Response**: Payment object.
+  - **Status Codes**: 200 OK, 404 Not Found, 401 Unauthorized
+
+- **PUT /api/payments/{payment_id}**
+  - **Description**: Update the status of a payment (admin only).
+  - **Headers**: `Authorization: Bearer <token>`
+  - **Path Param**: `payment_id` (int)
+  - **Request Body**: `{ "status": "enum (pending, completed, failed, refunded) (optional)", "transaction_id": "string (optional)" }`
+  - **Response**: Updated payment object.
+  - **Status Codes**: 200 OK, 404 Not Found, 403 Forbidden, 401 Unauthorized
 
 ## User Activity Endpoints
 

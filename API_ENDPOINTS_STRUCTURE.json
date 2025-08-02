@@ -1,0 +1,822 @@
+{
+  "api_endpoints": {
+    "authentication": {
+      "register": {
+        "url": "/api/auth/register",
+        "method": "POST",
+        "request_body": {
+          "email": "string",
+          "password": "string",
+          "role": "string"
+        },
+        "response": {
+          "access_token": "string",
+          "refresh_token": "string",
+          "token_type": "bearer"
+        }
+      },
+      "login": {
+        "url": "/api/auth/token",
+        "method": "POST",
+        "request_body": {
+          "username": "string (email)",
+          "password": "string"
+        },
+        "response": {
+          "access_token": "string",
+          "refresh_token": "string",
+          "token_type": "bearer"
+        }
+      },
+      "refresh": {
+        "url": "/api/auth/refresh",
+        "method": "POST",
+        "request_body": {
+          "refresh_token": "string"
+        },
+        "response": {
+          "access_token": "string",
+          "refresh_token": "string",
+          "token_type": "bearer"
+        }
+      },
+      "validate": {
+        "url": "/api/auth/validate",
+        "method": "POST",
+        "request_body": {
+          "token": "string"
+        },
+        "response": {
+          "valid": "boolean",
+          "email": "string",
+          "role": "string"
+        }
+      },
+      "logout": {
+        "url": "/api/auth/logout",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "response": {
+          "message": "string"
+        }
+      }
+    },
+    "user": {
+      "get_profile": {
+        "url": "/api/user/me",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "response": {
+          "id": "integer",
+          "email": "string",
+          "role": "string",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      },
+      "update_profile": {
+        "url": "/api/user/me",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "email": "string (optional)",
+          "password": "string (optional)",
+          "role": "string (optional)"
+        },
+        "response": {
+          "id": "integer",
+          "email": "string",
+          "role": "string",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      }
+    },
+    "admin": {
+      "get_users": {
+        "url": "/api/admin/users",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "email": "string",
+            "role": "string",
+            "created_at": "datetime",
+            "updated_at": "datetime"
+          }
+        ]
+      }
+    },
+    "otp": {
+      "send_email_otp": {
+        "url": "/api/otp/send-email-otp",
+        "method": "POST",
+        "request_body": {
+          "email": "string"
+        },
+        "response": {
+          "message": "string"
+        }
+      },
+      "send_sms_otp": {
+        "url": "/api/otp/send-sms-otp",
+        "method": "POST",
+        "request_body": {
+          "phone": "string"
+        },
+        "response": {
+          "message": "string"
+        }
+      },
+      "verify_otp": {
+        "url": "/api/otp/verify-otp",
+        "method": "POST",
+        "request_body": {
+          "email_or_phone": "string",
+          "otp": "string"
+        },
+        "response": {
+          "message": "string"
+        }
+      }
+    },
+    "password_reset": {
+      "request_reset": {
+        "url": "/api/password-reset/request",
+        "method": "POST",
+        "request_body": {
+          "email": "string"
+        },
+        "response": {
+          "message": "string"
+        }
+      },
+      "confirm_reset": {
+        "url": "/api/password-reset/confirm",
+        "method": "POST",
+        "request_body": {
+          "email": "string",
+          "code": "string",
+          "new_password": "string"
+        },
+        "response": {
+          "message": "string"
+        }
+      }
+    },
+    "metrics": {
+      "health_check": {
+        "url": "/api/metrics/health",
+        "method": "GET",
+        "response": {
+          "status": "string"
+        }
+      },
+      "get_metrics": {
+        "url": "/api/metrics/metrics",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "response": {
+          "request_count": "integer",
+          "endpoint_stats": "object",
+          "error_count": "integer"
+        }
+      }
+    },
+    "inventory": {
+      "create_item": {
+        "url": "/api/item/items",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "name": "string",
+          "description": "string (optional)",
+          "quantity": "integer",
+          "price": "float"
+        },
+        "response": {
+          "id": "integer",
+          "name": "string",
+          "description": "string",
+          "quantity": "integer",
+          "price": "float",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      },
+      "create_items_bulk": {
+        "url": "/api/item/items/bulk",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": [
+          {
+            "name": "string",
+            "description": "string (optional)",
+            "quantity": "integer",
+            "price": "float"
+          }
+        ],
+        "response": [
+          {
+            "id": "integer",
+            "name": "string",
+            "description": "string",
+            "quantity": "integer",
+            "price": "float",
+            "created_at": "datetime",
+            "updated_at": "datetime"
+          }
+        ]
+      },
+      "get_items": {
+        "url": "/api/item/items",
+        "method": "GET",
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "name": "string",
+            "description": "string",
+            "quantity": "integer",
+            "price": "float",
+            "created_at": "datetime",
+            "updated_at": "datetime"
+          }
+        ]
+      },
+      "get_item": {
+        "url": "/api/item/items/{item_id}",
+        "method": "GET",
+        "path_params": {
+          "item_id": "integer"
+        },
+        "response": {
+          "id": "integer",
+          "name": "string",
+          "description": "string",
+          "quantity": "integer",
+          "price": "float",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      },
+      "update_item": {
+        "url": "/api/item/items/{item_id}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "item_id": "integer"
+        },
+        "request_body": {
+          "name": "string (optional)",
+          "description": "string (optional)",
+          "quantity": "integer (optional)",
+          "price": "float (optional)"
+        },
+        "response": {
+          "id": "integer",
+          "name": "string",
+          "description": "string",
+          "quantity": "integer",
+          "price": "float",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      },
+      "delete_item": {
+        "url": "/api/item/items/{item_id}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "item_id": "integer"
+        },
+        "response": {
+          "id": "integer",
+          "name": "string",
+          "description": "string",
+          "quantity": "integer",
+          "price": "float",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      }
+    },
+    "media": {
+      "upload_media": {
+        "url": "/api/media/media",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "file": "multipart/form-data"
+        },
+        "response": {
+          "id": "integer",
+          "filename": "string",
+          "filepath": "string",
+          "content_type": "string",
+          "created_at": "datetime"
+        }
+      },
+      "get_media": {
+        "url": "/api/media/media/{media_id}",
+        "method": "GET",
+        "path_params": {
+          "media_id": "integer"
+        },
+        "response": {
+          "id": "integer",
+          "filename": "string",
+          "filepath": "string",
+          "content_type": "string",
+          "created_at": "datetime"
+        }
+      }
+    },
+    "receipt": {
+      "create_receipt": {
+        "url": "/api/receipt/receipts",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "order_id": "integer",
+          "items": "array",
+          "total": "float"
+        },
+        "response": {
+          "id": "integer",
+          "order_id": "integer",
+          "items": "array",
+          "total": "float",
+          "created_at": "datetime"
+        }
+      },
+      "get_receipt": {
+        "url": "/api/receipt/receipts/{receipt_id}",
+        "method": "GET",
+        "path_params": {
+          "receipt_id": "integer"
+        },
+        "response": {
+          "id": "integer",
+          "order_id": "integer",
+          "items": "array",
+          "total": "float",
+          "created_at": "datetime"
+        }
+      },
+      "get_receipts": {
+        "url": "/api/receipt/receipts",
+        "method": "GET",
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "order_id": "integer",
+            "items": "array",
+            "total": "float",
+            "created_at": "datetime"
+          }
+        ]
+      }
+    },
+    "payment": {
+      "create_payment": {
+        "url": "/api/payments",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "order_id": "string",
+          "amount": "float",
+          "currency": "string (default TZS)",
+          "method": "enum (selcom, paypal, stripe, mpesa)",
+          "buyer_email": "string (optional)",
+          "buyer_name": "string (optional)",
+          "buyer_phone": "string (optional)"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "order_id": "string",
+          "amount": "float",
+          "currency": "string",
+          "method": "string",
+          "status": "string",
+          "transaction_id": "string",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      },
+      "get_payments": {
+        "url": "/api/payments",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "order_id": "string",
+            "amount": "float",
+            "currency": "string",
+            "method": "string",
+            "status": "string",
+            "transaction_id": "string",
+            "created_at": "datetime",
+            "updated_at": "datetime"
+          }
+        ]
+      },
+      "get_payment_details": {
+        "url": "/api/payments/{payment_id}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "payment_id": "integer"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "order_id": "string",
+          "amount": "float",
+          "currency": "string",
+          "method": "string",
+          "status": "string",
+          "transaction_id": "string",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      },
+      "update_payment_status": {
+        "url": "/api/payments/{payment_id}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "payment_id": "integer"
+        },
+        "request_body": {
+          "status": "enum (pending, completed, failed, refunded) (optional)",
+          "transaction_id": "string (optional)"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "order_id": "string",
+          "amount": "float",
+          "currency": "string",
+          "method": "string",
+          "status": "string",
+          "transaction_id": "string",
+          "created_at": "datetime",
+          "updated_at": "datetime"
+        }
+      }
+    },
+    "user_activity": {
+      "log_activity": {
+        "url": "/api/user-activity/activities",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "user_id": "integer",
+          "action": "string",
+          "details": "string (optional)"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "action": "string",
+          "details": "string",
+          "created_at": "datetime"
+        }
+      },
+      "get_activities": {
+        "url": "/api/user-activity/activities",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "action": "string",
+            "details": "string",
+            "created_at": "datetime"
+          }
+        ]
+      },
+      "get_my_activities": {
+        "url": "/api/user-activity/my-activities",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "action": "string",
+            "details": "string",
+            "created_at": "datetime"
+          }
+        ]
+      }
+    },
+    "notification": {
+      "create_notification": {
+        "url": "/api/notification/notifications",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "user_id": "integer",
+          "title": "string",
+          "message": "string"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "title": "string",
+          "message": "string",
+          "is_read": "boolean",
+          "created_at": "datetime"
+        }
+      },
+      "get_notifications": {
+        "url": "/api/notification/notifications",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "title": "string",
+            "message": "string",
+            "is_read": "boolean",
+            "created_at": "datetime"
+          }
+        ]
+      },
+      "get_my_notifications": {
+        "url": "/api/notification/my-notifications",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "title": "string",
+            "message": "string",
+            "is_read": "boolean",
+            "created_at": "datetime"
+          }
+        ]
+      },
+      "update_notification": {
+        "url": "/api/notification/notifications/{notification_id}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "notification_id": "integer"
+        },
+        "request_body": {
+          "is_read": "boolean"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "title": "string",
+          "message": "string",
+          "is_read": "boolean",
+          "created_at": "datetime"
+        }
+      }
+    },
+    "audit_log": {
+      "log_audit": {
+        "url": "/api/audit-log/audit-logs",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "user_id": "integer",
+          "entity_type": "string",
+          "entity_id": "integer",
+          "action": "string",
+          "details": "string (optional)"
+        },
+        "response": {
+          "id": "integer",
+          "user_id": "integer",
+          "entity_type": "string",
+          "entity_id": "integer",
+          "action": "string",
+          "details": "string",
+          "created_at": "datetime"
+        }
+      },
+      "get_audit_logs": {
+        "url": "/api/audit-log/audit-logs",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "entity_type": "string",
+            "entity_id": "integer",
+            "action": "string",
+            "details": "string",
+            "created_at": "datetime"
+          }
+        ]
+      },
+      "get_entity_audit_logs": {
+        "url": "/api/audit-log/audit-logs/entity/{entity_type}/{entity_id}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "entity_type": "string",
+          "entity_id": "integer"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "user_id": "integer",
+            "entity_type": "string",
+            "entity_id": "integer",
+            "action": "string",
+            "details": "string",
+            "created_at": "datetime"
+          }
+        ]
+      }
+    },
+    "chat_message": {
+      "send_message": {
+        "url": "/api/chat-message/messages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "request_body": {
+          "receiver_id": "integer",
+          "content": "string"
+        },
+        "response": {
+          "id": "integer",
+          "sender_id": "integer",
+          "receiver_id": "integer",
+          "content": "string",
+          "is_read": "boolean",
+          "created_at": "datetime"
+        }
+      },
+      "get_sent_messages": {
+        "url": "/api/chat-message/messages/sent",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "sender_id": "integer",
+            "receiver_id": "integer",
+            "content": "string",
+            "is_read": "boolean",
+            "created_at": "datetime"
+          }
+        ]
+      },
+      "get_received_messages": {
+        "url": "/api/chat-message/messages/received",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "query_params": {
+          "skip": "integer (default 0)",
+          "limit": "integer (default 100)"
+        },
+        "response": [
+          {
+            "id": "integer",
+            "sender_id": "integer",
+            "receiver_id": "integer",
+            "content": "string",
+            "is_read": "boolean",
+            "created_at": "datetime"
+          }
+        ]
+      },
+      "update_message": {
+        "url": "/api/chat-message/messages/{message_id}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer <token>"
+        },
+        "path_params": {
+          "message_id": "integer"
+        },
+        "request_body": {
+          "is_read": "boolean"
+        },
+        "response": {
+          "id": "integer",
+          "sender_id": "integer",
+          "receiver_id": "integer",
+          "content": "string",
+          "is_read": "boolean",
+          "created_at": "datetime"
+        }
+      }
+    }
+  }
+}
