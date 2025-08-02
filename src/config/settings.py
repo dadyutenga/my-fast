@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
     
+    # Selcom Pay
+    SELCOM_VENDOR_ID: str = "your-selcom-vendor-id"
+    SELCOM_API_KEY: str = "your-selcom-api-key"
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

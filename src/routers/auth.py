@@ -73,6 +73,11 @@ async def validate_token(token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
 @router.post("/logout")
-async def logout(current_user: User = Depends(get_current_active_user)):
-    # In a real application, you might invalidate the token in a database or cache
-    return {"message": "Successfully logged out"}
+async def logout(current_user: User = Depends(get_current_active_user), token: str = Depends(oauth2_scheme)):
+    try:
+        payload = decode_token(token)
+        exp = payload.get("exp")
+        r.setex(f"blacklist:{token}", exp - int(datetime.utcnow().timestamp()), "true")
+        return {"message": "Successfully logged out"}
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
